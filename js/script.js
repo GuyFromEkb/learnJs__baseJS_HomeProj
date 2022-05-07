@@ -21,3 +21,24 @@
 
 Проверить, чтобы все работало без ошибок в консоли */
 "use strict";
+let numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?", "");
+
+let personalMovieDB = {
+    count: numberOfFilms,
+    movies: {},
+    actors: {},
+    genres: [],
+    privat: false
+};
+
+console.log(personalMovieDB);
+
+let fstQuestion = prompt("Один из последних просмотренных фильмов?", "");
+let fstQuestionPart2 = +prompt("На сколько оцените его?", "0");
+let scndQuestion = prompt("Один из последних просмотренных фильмов?", "");
+let scndQuestionPart2 = +prompt("На сколько оцените его?", "0");
+
+personalMovieDB.movies[fstQuestion] = fstQuestionPart2;
+personalMovieDB.movies[scndQuestion] = scndQuestionPart2;
+
+console.log(personalMovieDB);
