@@ -1,44 +1,94 @@
 /* Задание на урок:
 
-1) Создать переменную numberOfFilms и в неё поместить ответ от пользователя на вопрос:
-'Сколько фильмов вы уже посмотрели?'
+1) Первую часть задания повторить по уроку
 
-2) Создать объект personalMovieDB и в него поместить такие свойства:
-    - count - сюда передается ответ на первый вопрос
-    - movies - в это свойство поместить пустой объект
-    - actors - тоже поместить пустой объект
-    - genres - сюда поместить пустой массив
-    - privat - в это свойство поместить boolean(логическое) значение false
+2) Создать функцию showMyDB, которая будет проверять свойство privat. Если стоит в позиции
+false - выводит в консоль главный объект программы
 
-3) Задайте пользователю по два раза вопросы:
-    - 'Один из последних просмотренных фильмов?'
-    - 'На сколько оцените его?'
-Ответы стоит поместить в отдельные переменные
-Записать ответы в объект movies в формате: 
-    movies: {
-        'logan': '8.1'
-    }
+3) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос 
+"Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
+genres
 
-Проверить, чтобы все работало без ошибок в консоли */
+P.S. Функции вызывать не обязательно*/
+
+
 "use strict";
-let numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?", "");
+
+let numberOfFilms;
+let fstQuestion;
+let fstQuestionPart2;
+let count = 0;
 
 let personalMovieDB = {
-    count: numberOfFilms,
+    count: {},
     movies: {},
     actors: {},
     genres: [],
     privat: false
 };
 
-console.log(personalMovieDB);
+function start() {
 
-let fstQuestion = prompt("Один из последних просмотренных фильмов?", "");
-let fstQuestionPart2 = +prompt("На сколько оцените его?", "0");
-let scndQuestion = prompt("Один из последних просмотренных фильмов?", "");
-let scndQuestionPart2 = +prompt("На сколько оцените его?", "0");
+    for (;;) {
+        numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?", "");
+        if (numberOfFilms !== "" && numberOfFilms !== null && !isNaN(numberOfFilms)) {
+            personalMovieDB.count = numberOfFilms;
+            break;
+        }
+        alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести не цифровое значение.\nПовторите попытку");
+    }
+}
 
-personalMovieDB.movies[fstQuestion] = fstQuestionPart2;
-personalMovieDB.movies[scndQuestion] = scndQuestionPart2;
+function rememberMyFilms() {
+    while (count < 2) {
+        fstQuestion = prompt("Один из последних просмотренных фильмов?", "");
 
-console.log(personalMovieDB);
+        if (fstQuestion == null || fstQuestion.length == 0 || fstQuestion.length > 50) {
+            alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести название фильма длинее, чем 50 символов.\nПовторите попытку");
+            continue;
+        }
+        fstQuestionPart2 = +prompt("На сколько оцените его?", "0");
+        if (fstQuestionPart2 == null || fstQuestionPart2.length == 0 || fstQuestionPart2 > 10) {
+            alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести значение больше 10.\nПовторите попытку");
+            continue;
+        }
+
+        personalMovieDB.movies[fstQuestion] = fstQuestionPart2;
+
+        count++;
+
+    }
+}
+
+function detectPersonalLevel() {
+    if (personalMovieDB.count <= 10)
+        console.log('Просмотрено довольно мало фильмов');
+    else if (personalMovieDB.count <= 30)
+        console.log('Вы классический зритель');
+    else if (personalMovieDB.count > 30)
+        console.log('Вы киноман');
+    else
+        console.log('Произошла ошибка');
+}
+
+function showMyDB(privatStatus) {
+    if (!privatStatus)
+        console.log(personalMovieDB);
+    else
+        console.log('Нет доступа')
+
+}
+
+function writeYourGenres() {
+    for (let i = 0; i < 3; i++) {
+
+        personalMovieDB.genres[i] = prompt(`Ваш любимый жанр под номером ${ i + 1 }`, "");
+
+    }
+}
+
+start();
+rememberMyFilms();
+detectPersonalLevel();
+writeYourGenres();
+showMyDB(personalMovieDB.privat);
