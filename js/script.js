@@ -1,94 +1,101 @@
 /* Задание на урок:
 
-1) Первую часть задания повторить по уроку
+1) У нас уже есть рабочее приложение, состоящее из отдельных функций. Представьте, что
+перед вами стоит задача переписать его так, чтобы все функции стали методами объекта personalMovieDB
+Такое случается в реальных продуктах при смене технологий или подхода к архитектуре программы
 
-2) Создать функцию showMyDB, которая будет проверять свойство privat. Если стоит в позиции
-false - выводит в консоль главный объект программы
+2) Создать метод toggleVisibleMyDB, который при вызове будет проверять свойство privat. Если оно false - он
+переключает его в true, если true - переключает в false. Протестировать вместе с showMyDB.
 
-3) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос 
-"Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
-genres
-
-P.S. Функции вызывать не обязательно*/
+3) В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку. 
+Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены - 
+при помощи метода forEach вывести в консоль сообщения в таком виде:
+"Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"*/
 
 
 "use strict";
 
-let numberOfFilms;
-let fstQuestion;
-let fstQuestionPart2;
-let count = 0;
 
 let personalMovieDB = {
     count: {},
     movies: {},
     actors: {},
     genres: [],
-    privat: false
+    privat: true,
+    start() {
+        for (;;) {
+            this.count = +prompt("Сколько фильмов вы уже посмотрели?", "");
+            if (this.count !== "" && this.count !== null && !isNaN(this.count)) {
+                break;
+            }
+            alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести не цифровое значение.\nПовторите попытку");
+        }
+    },
+    rememberMyFilms() {
+        let count = 0,
+            filmName,
+            filmGrade;
+
+        while (count < 2) {
+            filmName = prompt("Один из последних просмотренных фильмов?", "");
+
+            if (filmName == null || filmName.length == 0 || filmName.length > 50) {
+                alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести название фильма длинее, чем 50 символов.\nПовторите попытку");
+                continue;
+            }
+            filmGrade = +prompt("На сколько оцените его?", "0");
+            if (filmGrade == null || filmGrade.length == 0 || filmGrade > 10) {
+                alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести значение больше 10.\nПовторите попытку");
+                continue;
+            }
+
+            this.movies[filmName] = filmGrade;
+
+            count++;
+
+        }
+    },
+    detectPersonalLevel() {
+        if (this.count <= 10)
+            console.log('Просмотрено довольно мало фильмов');
+        else if (this.count <= 30)
+            console.log('Вы классический зритель');
+        else if (this.count > 30)
+            console.log('Вы киноман');
+        else
+            console.log('Произошла ошибка');
+    },
+    toggleVisibleMyDB() {
+        this.privat = !this.privat;
+    },
+    showMyDB() {
+        if (this.privat)
+            console.log('Нет доступа')
+        else
+            console.log(personalMovieDB);
+    },
+    writeYourGenres() {
+        for (let i = 0; i < 1; i++) {
+
+            this.genres = prompt(`Введите ваши любимы жанры через запятую`, "").toLowerCase().split(",");
+            if (this.genres == null || this.genres == "") {
+                i--;
+                alert("ответ не может быть в виде пустой строки, и вы не можете его отменить.\nПовторите попытку");
+            }
+        }
+        // this.genres.sort();
+
+        this.genres.sort().forEach((elem, index) => {
+            console.log(`Любимый жанр ${index+1} это ${elem}`);
+        });
+    }
+
 };
 
-function start() {
 
-    for (;;) {
-        numberOfFilms = +prompt("Сколько фильмов вы уже посмотрели?", "");
-        if (numberOfFilms !== "" && numberOfFilms !== null && !isNaN(numberOfFilms)) {
-            personalMovieDB.count = numberOfFilms;
-            break;
-        }
-        alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести не цифровое значение.\nПовторите попытку");
-    }
-}
-
-function rememberMyFilms() {
-    while (count < 2) {
-        fstQuestion = prompt("Один из последних просмотренных фильмов?", "");
-
-        if (fstQuestion == null || fstQuestion.length == 0 || fstQuestion.length > 50) {
-            alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести название фильма длинее, чем 50 символов.\nПовторите попытку");
-            continue;
-        }
-        fstQuestionPart2 = +prompt("На сколько оцените его?", "0");
-        if (fstQuestionPart2 == null || fstQuestionPart2.length == 0 || fstQuestionPart2 > 10) {
-            alert("ответ не может быть в виде пустой строки, вы не можете отменить ответ или ввести значение больше 10.\nПовторите попытку");
-            continue;
-        }
-
-        personalMovieDB.movies[fstQuestion] = fstQuestionPart2;
-
-        count++;
-
-    }
-}
-
-function detectPersonalLevel() {
-    if (personalMovieDB.count <= 10)
-        console.log('Просмотрено довольно мало фильмов');
-    else if (personalMovieDB.count <= 30)
-        console.log('Вы классический зритель');
-    else if (personalMovieDB.count > 30)
-        console.log('Вы киноман');
-    else
-        console.log('Произошла ошибка');
-}
-
-function showMyDB(privatStatus) {
-    if (!privatStatus)
-        console.log(personalMovieDB);
-    else
-        console.log('Нет доступа')
-
-}
-
-function writeYourGenres() {
-    for (let i = 0; i < 3; i++) {
-
-        personalMovieDB.genres[i] = prompt(`Ваш любимый жанр под номером ${ i + 1 }`, "");
-
-    }
-}
-
-start();
-rememberMyFilms();
-detectPersonalLevel();
-writeYourGenres();
-showMyDB(personalMovieDB.privat);
+personalMovieDB.start();
+personalMovieDB.detectPersonalLevel();
+personalMovieDB.rememberMyFilms();
+personalMovieDB.writeYourGenres();
+personalMovieDB.toggleVisibleMyDB();
+personalMovieDB.showMyDB();
