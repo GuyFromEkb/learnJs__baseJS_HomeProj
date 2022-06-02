@@ -1,25 +1,18 @@
 "use strict";
+const box = document.querySelector('.box'),
+    btn = document.querySelector('.btn');
 
-// const btn = document.querySelector(".btn");
-// const box = document.querySelector(".box");
 
-// function myAnimation() {
-//     let pos = 0;
-//     const id = setInterval(frame, 10);
 
-//     function frame() {
-//         if (pos === 300) {
-//             clearInterval(id);
-//         } else {
-//             pos++;
-//             box.style.left = pos + "px";
-//             box.style.top = pos + "px";
-//         }
-//     }
-// }
-
-// btn.addEventListener("click", myAnimation);
-
-let today = new Date();
-
-console.log(today.getTime());
+btn.addEventListener('click', () => {
+    let positinBox = 0;
+    const animate = setInterval(() => {
+        if (positinBox > 300) {
+            clearInterval(animate);
+        } else {
+            box.style.left = positinBox + 'px';
+            box.style.top = positinBox + 'px';
+            positinBox++;
+        }
+    }, 10);
+});
