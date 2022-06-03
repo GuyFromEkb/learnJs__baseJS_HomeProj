@@ -1,18 +1,18 @@
 "use strict";
-const box = document.querySelector('.box'),
-    btn = document.querySelector('.btn');
 
 
+function getTime(date) {
+    const deadline = Date.parse(date) - new Date();
 
-btn.addEventListener('click', () => {
-    let positinBox = 0;
-    const animate = setInterval(() => {
-        if (positinBox > 300) {
-            clearInterval(animate);
-        } else {
-            box.style.left = positinBox + 'px';
-            box.style.top = positinBox + 'px';
-            positinBox++;
-        }
-    }, 10);
-});
+    let day = Math.floor(deadline / (1000 * 60 * 60 * 24));
+    let hour = Math.floor((deadline / (1000 * 60 * 60)) % 24);
+    let minute = Math.floor((deadline / (1000 * 60)) % 60);
+    let second = Math.floor((deadline / (1000)) % 60);
+
+    return {
+        day,
+        hour,
+        minute,
+        second
+    };
+}
