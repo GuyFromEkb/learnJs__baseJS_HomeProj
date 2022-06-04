@@ -100,6 +100,9 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     function openModal() {
+        clearTimeout(autoModalTimerID);
+        window.removeEventListener('scroll', openModalEndScreen);
+
         modalWindow.style.display = "block";
         document.body.style.overflow = 'hidden';
 
@@ -117,9 +120,21 @@ window.addEventListener('DOMContentLoaded', function() {
         modalClose.addEventListener('click', closeModal);
     }
 
+
+
     modalBtn.forEach(item => {
         item.addEventListener('click', openModal);
     });
+
+    //Auto Modal
+    const autoModalTimerID = setTimeout(openModal, 20000);
+
+    function openModalEndScreen() {
+        if (document.documentElement.scrollTop >= document.documentElement.scrollHeight - (document.documentElement.clientHeight + 120)) {
+            openModal();
+        }
+    }
+    window.addEventListener('scroll', openModalEndScreen);
 
 
 
