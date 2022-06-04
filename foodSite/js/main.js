@@ -37,7 +37,6 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
     });
-    /**********/
 
     /*** Timer **/
     const clock = document.querySelectorAll('.timer__block span'),
@@ -45,12 +44,19 @@ window.addEventListener('DOMContentLoaded', function() {
 
     function getTime(date) {
         const miliseconds = Date.parse(date) - new Date();
+        let day, hour, minute, second;
 
-        let day = Math.floor(miliseconds / (1000 * 60 * 60 * 24));
-        let hour = Math.floor((miliseconds / (1000 * 60 * 60)) % 24);
-        let minute = Math.floor((miliseconds / (1000 * 60)) % 60);
-        let second = Math.floor((miliseconds / (1000)) % 60);
-
+        if (miliseconds <= 0) {
+            day = 0;
+            hour = 0;
+            minute = 0;
+            second = 0;
+        } else {
+            day = Math.floor(miliseconds / (1000 * 60 * 60 * 24));
+            hour = Math.floor((miliseconds / (1000 * 60 * 60)) % 24);
+            minute = Math.floor((miliseconds / (1000 * 60)) % 60);
+            second = Math.floor((miliseconds / (1000)) % 60);
+        }
         return {
             miliseconds,
             day,
@@ -60,21 +66,67 @@ window.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    function addZero(numb) {
+        if (numb < 10) { numb = '0' + numb };
+        return numb;
+    }
+
     function setTimerOnSite(date) {
-        const time = getTime(date);
-        if (time.miliseconds < 0) {
-            clearInterval(startTimer);
-        } else {
+        function updateclock() {
+
+            const time = getTime(date);
             clock[0].innerHTML = time.day;
-            clock[1].innerHTML = time.hour;
-            clock[2].innerHTML = time.minute;
-            clock[3].innerHTML = time.second;
+            clock[1].innerHTML = addZero(time.hour);
+            clock[2].innerHTML = addZero(time.minute);
+            clock[3].innerHTML = addZero(time.second);
+
+            if (time.miliseconds < 0) {
+                clearInterval(startTimer);
+            }
         }
+        updateclock();
+        const startTimer = setInterval(updateclock, 1000);
     }
     setTimerOnSite(NEED_DATE);
 
-    const startTimer = setInterval(setTimerOnSite, 1000, NEED_DATE);
-    /**********/
+    /** Modal **/
+    const modalWindow = document.querySelector('.modal'),
+        modalClose = document.querySelector('.modal__close'),
+        modalBtn = document.querySelectorAll('[data-modal="open"]');
+
+    function closeModal() {
+        modalWindow.style.display = "none";
+        document.body.style.overflow = 'visible';
+    }
+
+    function openModal() {
+        modalWindow.style.display = "block";
+        document.body.style.overflow = 'hidden';
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                modalWindow.style.display = "none";
+                document.body.style.overflow = 'visible';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        modalClose.addEventListener('click', () => {
+            closeModal();
+        });
+    }
+
+    modalBtn.forEach(item => {
+        item.addEventListener('click', () => {
+            openModal();
+        });
+    });
+
 
 
 });
