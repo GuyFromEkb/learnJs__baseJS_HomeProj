@@ -105,26 +105,20 @@ window.addEventListener('DOMContentLoaded', function() {
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
-                modalWindow.style.display = "none";
-                document.body.style.overflow = 'visible';
-            }
-        });
-
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal')) {
                 closeModal();
             }
         });
 
-        modalClose.addEventListener('click', () => {
-            closeModal();
+        document.addEventListener('click', function(e) {
+            if (e.target === modalWindow) { closeModal(); }
+            // if (e.target.classList.contains('modal')) { closeModal(); }
         });
+
+        modalClose.addEventListener('click', closeModal);
     }
 
     modalBtn.forEach(item => {
-        item.addEventListener('click', () => {
-            openModal();
-        });
+        item.addEventListener('click', openModal);
     });
 
 
