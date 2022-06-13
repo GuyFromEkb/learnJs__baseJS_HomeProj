@@ -206,20 +206,26 @@ window.addEventListener('DOMContentLoaded', function() {
 
             const formData = new FormData(form);
 
+            fetch('server.php', {
+                    method: "POST",
+                    headers: {
+                        // 'Content-Type': 'application/json'
+                    },
+                    body: formData,
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-            request.send(formData);
-
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    form.reset();
-                    console.log(request.response);
+                })
+                .then(responce => responce.text())
+                .then(data => {
                     ModalMessage("Спасибо за заявку!");
-                } else {
+                    console.log(data);
+                })
+                .catch(() => {
                     ModalMessage("Что то пошло не так!");
-                }
-            });
+                })
+                .finally(() => {
+                    form.reset();
+                });
+
         });
     });
 
