@@ -39,6 +39,7 @@ window.addEventListener('DOMContentLoaded', function() {
             }
 
         });
+
     })();
 
     /*** Timer **/
@@ -268,7 +269,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
-            e.preventDefault();
+            e.target.preventDefault();
 
             const formData = new FormData(e.target);
             const formDataJson = JSON.stringify(Object.fromEntries(formData.entries()));
