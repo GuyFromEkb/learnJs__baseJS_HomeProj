@@ -269,7 +269,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
-            e.target.preventDefault();
+            e.preventDefault();
 
             const formData = new FormData(e.target);
             const formDataJson = JSON.stringify(Object.fromEntries(formData.entries()));
@@ -278,6 +278,132 @@ window.addEventListener('DOMContentLoaded', function() {
 
         });
     });
+
+
+
+
+
+
+
+
+    //SLIDER
+    (function() {
+
+        const sliders = document.querySelectorAll('.offer__slide');
+        const nextSlider = document.querySelector('.offer__slider-next');
+        const prevSlider = document.querySelector('.offer__slider-prev');
+        const current = document.querySelector('#current');
+        const total = document.querySelector('#total');
+        const wrapSliderOuter = document.querySelector('.offer__slider-wrapper');
+        const wrapSliderInner = document.querySelector('.offer__slider-inner');
+
+        let widthSlider = sliders[0].offsetWidth; //узнаем, какая будет ширина каждого элемента ( предпологается, что ширина будет одинаковая)
+        let widthWrap = 0; // Ширина обёртки
+        let counter = 0; // номер текущего слайдера
+        const navDotsArr = []; // массив точек ( элемент навигации)
+
+        //добавляем стили + делаем вычисления 
+        function addStyles() {
+
+            widthWrap = 100 * sliders.length; // ширина в %
+
+            total.innerText = sliders.length < 10 ? `0${sliders.length}` : sliders.length; //кол-во слайдеров
+            current.innerText = "0" + (counter + 1); //первый слайдер
+
+            //скрываем лишнии обьекты со страницы и задаем позишен
+            wrapSliderOuter.style.overflow = "hidden";
+            wrapSliderOuter.style.position = "relative";
+            //растягиваем блок в исходя из количества обектво
+            wrapSliderInner.style.display = "flex";
+            wrapSliderInner.style.width = widthWrap + "%";
+            wrapSliderInner.style.transition = "all .9s";
+            //Добавляем нав-элементы к слайдеру - обёртка 
+            const navWrap = document.createElement('div');
+            // стили для нав меню, обертка
+            navWrap.style.cssText =
+                `
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 15;
+                    display: flex;
+                    justify-content: center;
+                    margin-right: 15%;
+                    margin-left: 15%;
+                    list-style: none;
+                `;
+            wrapSliderOuter.insertAdjacentElement('beforeend', navWrap);
+            //Добавляем нав-элементы к слайдеру - точки
+            for (let i = 0; i < sliders.length; i++) {
+                const dot = document.createElement('div');
+                dot.setAttribute('data-slide-number', i + 1);
+                dot.style.cssText =
+                    `
+                    box-sizing: content-box;
+                    flex: 0 1 auto;
+                    width: 30px;
+                    height: 6px;
+                    margin-right: 3px;
+                    margin-left: 3px;
+                    cursor: pointer;
+                    background-color: #fff;
+                    background-clip: padding-box;
+                    border-top: 10px solid transparent;
+                    border-bottom: 10px solid transparent;
+                    opacity: .5;
+                    transition: opacity .6s ease;
+                `;
+                navWrap.insertAdjacentElement('beforeend', dot);
+                navDotsArr.push(dot);
+            }
+            // выделения, 1го элемента при инициализации
+            navDotsArr[counter].style.opacity = "1";
+
+
+        }
+        addStyles();
+
+        // вся движуха тут n- принимает номер слайдера
+        function move(sliderNum) {
+
+            if (sliderNum >= sliders.length) { sliderNum = 0; }
+            if (sliderNum < 0) { sliderNum = sliders.length - 1; }
+
+            counter = sliderNum;
+
+            current.innerText = (counter + 1) < 10 ? "0" + (counter + 1) : (counter + 1);
+
+            //нав меню
+            navDotsArr.forEach(item => item.style.opacity = ".5");
+            navDotsArr[counter].style.opacity = "1";
+
+            //движение
+            wrapSliderInner.style.transform = `translateX(${-(sliderNum*widthSlider)}px)`;
+        }
+
+        nextSlider.addEventListener('click', () => {
+            counter++;
+            move(counter);
+        });
+
+        prevSlider.addEventListener('click', () => {
+            counter--;
+            move(counter);
+        });
+
+        navDotsArr.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                const numberOfSlider = e.target.getAttribute('data-slide-number') - 1;
+                move(numberOfSlider);
+            });
+        });
+
+    })();
+
+
+
+
 
 
 });
